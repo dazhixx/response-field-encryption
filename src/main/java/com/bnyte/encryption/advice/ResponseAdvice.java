@@ -121,10 +121,11 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     private void hasChildrenFieldHandler(List<Field> fields, Object obj) throws IllegalAccessException {
         for (Field field : fields) {
-            // 给最高操作等级
+            // 给最高操作等级(非常重要)
             field.setAccessible(true);
             Object o = field.get(obj);
             if (Objects.isNull(o)) return;
+            // 获取字段的所有属性值
             List<Field> innerFields = List.of(o.getClass().getDeclaredFields());
             // 如果是集合还得继续往下找
             if (o instanceof Collection) {
@@ -149,7 +150,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      * @return 是否需要过滤掉当前对象
      */
     private boolean notBaseDataType(Object o) {
-        return !(o instanceof String) && !(o instanceof Integer);
+        return !(o instanceof String) && !(o instanceof Integer) && !(o instanceof Long);
     }
 
     /**
