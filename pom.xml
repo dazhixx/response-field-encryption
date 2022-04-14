@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.bnyte</groupId>
+    <artifactId>response-field-encryption</artifactId>
+    <version>1.0.0</version>
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
+        <!--
+            这是我自己写的日志框架，真实项目中自行去掉，如果你想用的话也可以用，主要打印出输出请求和响应日志的，非常轻便，用AOP实现的
+            项目github首页：https://github.com/bnyte/forge
+         -->
+        <dependency>
+            <groupId>com.bnyte</groupId>
+            <artifactId>forge-spring-boot-starter</artifactId>
+            <version>1.0.8.1</version>
+        </dependency>
+    </dependencies>
+
+    <!-- SpringBoot打包插件 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                </configuration>
+                <version>3.8.1</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    
+</project>
