@@ -35,6 +35,7 @@ public class StartController {
     @EnableFieldEncryption // 开启加密
     @GetMapping("/encryption")
     R<User> encryption() {
+//        throw new RuntimeException("111"); // 试全局异常 打开它
         return R.ok(User.getInstance());
     }
 

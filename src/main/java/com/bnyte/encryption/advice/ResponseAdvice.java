@@ -11,6 +11,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -28,6 +30,17 @@ import java.util.*;
 public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
     private static final Logger log = LoggerFactory.getLogger(ResponseAdvice.class);
+
+    /**
+     * 全局异常处理器
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(Exception.class)
+    R<Void> handlerException(Exception e) {
+        log.info(e.getMessage(), e);
+        return R.error();
+    }
 
     /**
      *  过滤需要被beforeBodyWrite处理的方法
