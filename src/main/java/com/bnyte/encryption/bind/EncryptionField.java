@@ -1,5 +1,8 @@
 package com.bnyte.encryption.bind;
 
+import com.bnyte.encryption.enums.EEncryptionType;
+import org.springframework.util.StringUtils;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,4 +16,12 @@ import java.lang.annotation.*;
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface EncryptionField {
+
+    String value() default "";
+
+    /**
+     * 自定义当前属性加密方式
+     * @return 加密类型
+     */
+    EEncryptionType type() default EEncryptionType.DEFAULT;
 }

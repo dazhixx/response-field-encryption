@@ -2,6 +2,7 @@ package com.bnyte.encryption.advice;
 
 import com.bnyte.encryption.bind.EnableFieldEncryption;
 import com.bnyte.encryption.bind.EncryptionField;
+import com.bnyte.encryption.enums.EEncryptionType;
 import com.bnyte.forge.http.reactive.web.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,9 +149,12 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
                 hasChildrenFieldHandler(innerFields, o);
             }
             // 这里才是真正的需要处理的对象
-            else if (Objects.nonNull(field.getAnnotation(EncryptionField.class))) {
-                // 判断该属性值是否包含了需要加密注解
-                field.set(obj, fieldEncryption(o));
+            else {
+                EncryptionField encryptionField = field.getAnnotation(EncryptionField.class);
+                if (Objects.nonNull(encryptionField)) {
+                    // 判断该属性值是否包含了需要加密注解
+                    field.set(obj, fieldEncryption(o, encryptionField));
+                }
             }
         }
     }
@@ -172,7 +176,20 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      * @return 加密后的值
      */
     // TODO: 2022/4/15 加密代码
-    private Object fieldEncryption(Object obj) throws IllegalAccessException {
-        return "加密了: " + obj;
+    private Object fieldEncryption(Object obj, EncryptionField encryptionField) throws IllegalAccessException {
+        // 获取注解上指定的加密方式
+        EEncryptionType encryptionType = encryptionField.type();
+        /*
+            通过不同的指定加密方式来做不同的加密逻辑
+         */
+        switch (encryptionType) {
+            // 手机号加密
+            case MOBILE:
+                return "手机号加密: " + obj;
+            case DEFAULT:
+                return "默认加密>枚举类: " + obj;
+            default:
+                return "默认加密default: " + obj;
+        }
     }
 }
