@@ -185,11 +185,48 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         switch (encryptionType) {
             // 手机号加密
             case MOBILE:
-                return "手机号加密: " + obj;
+                return encryptionForMobile(obj);
             case DEFAULT:
-                return "默认加密>枚举类: " + obj;
+                return encryptionForDefault(obj);
             default:
-                return "默认加密default: " + obj;
+                return encryptionForDefault(obj);
+        }
+    }
+
+    /**
+     * 加密默认加密方式
+     * @param obj 未加密原文
+     * @return 加密后的数据
+     */
+    private Object encryptionForDefault(Object obj) {
+        // integer
+        if (obj instanceof Integer) {
+            // 这里用不同的加密方法去加密
+            return 100 + Integer.parseInt(obj.toString());
+        }
+        else if (obj instanceof String) {
+            // 这里用不同的加密方法去加密
+            return "默认加密方式字符串：" + obj;
+        } else {
+            throw new RuntimeException("未知数据类型");
+        }
+    }
+
+    /**
+     * 手机号加密方式
+     * @param obj 未加密原文
+     * @return 加密后的数据
+     */
+    private Object encryptionForMobile(Object obj) {
+        // integer
+        if (obj instanceof Integer) {
+            return 100 + Integer.parseInt(obj.toString());
+        }
+        // string
+        else if (obj instanceof String) {
+            return "手机号加密方式字符串：" + obj;
+        } else {
+            throw new RuntimeException("未知数据类型");
         }
     }
 }
