@@ -13,47 +13,51 @@ import java.util.List;
 public class User {
 
     public static User getInstance() {
-        return new User("ggboy_username", "ggboy_password", "18888888888", List.of(
-                new User("ggboy1_inner_username", "ggboy1_inner_username", "18888888888"),
-                new User("ggboy1_inner_username", "ggboy1_inner_username", "18888888888", List.of(
-                        new User("ggboy1_inner_username", "ggboy1_inner_username", "18888888888"),
-                        new User("ggboy1_inner_username", "ggboy1_inner_username", "18888888888")
+        return new User("ggboy_username", 123, 321, List.of(
+                new User("ggboy1_inner_username", 123, 321),
+                new User("ggboy1_inner_username", 123, 321, List.of(
+                        new User("ggboy1_inner_username", 123, 321),
+                        new User("ggboy1_inner_username", 123, 321)
                 ))
-        ));
+        ), new User("加密对象", 21321));
     }
 
     private String username;
 
     @EncryptionField // 属性有这个注解的话就会被加密
-    private String password;
+    private Integer password;
 
     @EncryptionField(type = EEncryptionType.MOBILE) // 指定手机加密
-    private String mobile;
+    private Integer mobile;
 
+    @EncryptionField
     private List<User> users;
+
+    @EncryptionField
+    private User user;
 
     public User() {
     }
 
-    public User(String username, String password, String mobile) {
+    public User(String username, Integer password, Integer mobile) {
         this.username = username;
         this.password = password;
         this.mobile = mobile;
     }
 
-    public User(String username, String password, String mobile, List<User> users) {
+    public User(String username, Integer password, Integer mobile, List<User> users) {
         this.username = username;
         this.password = password;
         this.mobile = mobile;
         this.users = users;
     }
 
-    public User(String username, String password) {
+    public User(String username, Integer password) {
         this.username = username;
         this.password = password;
     }
 
-    public User(String username, String password, List<User> users) {
+    public User(String username, Integer password, List<User> users) {
         this.username = username;
         this.password = password;
         this.users = users;
@@ -75,19 +79,35 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
+    public Integer getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(Integer password) {
         this.password = password;
     }
 
-    public String getMobile() {
+    public Integer getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
+    public void setMobile(Integer mobile) {
         this.mobile = mobile;
+    }
+
+    public User(String username, Integer password, Integer mobile, List<User> users, User user) {
+        this.username = username;
+        this.password = password;
+        this.mobile = mobile;
+        this.users = users;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

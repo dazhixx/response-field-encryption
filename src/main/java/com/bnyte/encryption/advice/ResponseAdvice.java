@@ -1,9 +1,15 @@
 package com.bnyte.encryption.advice;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bnyte.encryption.bind.EnableFieldEncryption;
 import com.bnyte.encryption.bind.EncryptionField;
 import com.bnyte.encryption.enums.EEncryptionType;
 import com.bnyte.forge.http.reactive.web.R;
+import com.bnyte.forge.util.JacksonUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -137,6 +143,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         for (Field field : fields) {
             // 给最高操作等级(非常重要)
             field.setAccessible(true);
+            EncryptionField encryptionField = field.getAnnotation(EncryptionField.class);
             Object o = field.get(obj);
             if (Objects.isNull(o)) return;
             // 获取字段的所有属性值
@@ -145,18 +152,28 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
             if (o instanceof Collection) {
                 findEncryptedPropertyRequired(o);
             }
+            // 加密整个对象(json字符串转换)
+            else if (!CollectionUtils.isEmpty(innerFields) && Objects.nonNull(encryptionField) && notBaseDataType(o)) {
+                field.set(obj, allFieldEncryption(o, encryptionField));
+            }
             else if (!CollectionUtils.isEmpty(innerFields) && notBaseDataType(o)) {
                 hasChildrenFieldHandler(innerFields, o);
             }
             // 这里才是真正的需要处理的对象
             else {
-                EncryptionField encryptionField = field.getAnnotation(EncryptionField.class);
                 if (Objects.nonNull(encryptionField)) {
                     // 判断该属性值是否包含了需要加密注解
                     field.set(obj, fieldEncryption(o, encryptionField));
                 }
             }
         }
+    }
+
+    private Object allFieldEncryption(Object o, EncryptionField encryptionField) {
+        String text = JSON.toJSONString(o);
+        JSONObject jsonObject = JSONObject.parseObject(text);
+        jsonObject.put("加密", "这是机密");
+        return JSON.toJSONString(jsonObject);
     }
 
     /**
